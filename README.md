@@ -1,42 +1,66 @@
 ## Extract embeddings
 
-Extract embeddings by specifying image indexs (applies to VQAv2 and COCO)
-```
-python scripts/get_vector_blocks.py --data_config /ceph/hpc/data/d2024d05-018-users/wenyan/code/VisU/datasets.yaml \
-     --model $MODEL --dataset $DATA \
-     --out_dir /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/output/embed/${MODEL}_vector_blocks_${DATA} \
-     --range "10000,20000"
-
-```
-
 Extract embeddings for the entire image set for the dataset (SEEDBENCH, foodieQA, etc.)
 
 ```
 export MODEL=llava
 export DATA=seedbench
-python scripts/get_vector_blocks_full_dataset.py --data_config /ceph/hpc/data/d2024d05-018-users/wenyan/code/VisU/datasets.yaml \
-    --model $MODEL --dataset $DATA --out_dir /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/output/embed/${MODEL}_vector_blocks_${DATA}
+python scripts/get_vector_blocks_full_dataset.py --data_config datasets.yaml \
+    --model $MODEL --dataset $DATA --out_dir embed/${MODEL}_vector_blocks_${DATA}
 ```
 
 ## FAISS KNN search with pre/post embeddings
 ```
-python scripts/faiss_knn_search.py \
-    --test_vector_folder /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/llava_vector_blocks/test \
-    --index_save_dir /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/llava_faiss_index/test 
+export DATA=cub
+export MODEL=llava
+export METHOD="L2"
+python scripts/faiss_knn_search.py --test_vector_folder ${MODEL}_vector_blocks_${DATA} \
+    --index_save_dir embed/${MODEL}_vector_blocks_${DATA}/knn_index_${METHOD} \
+    --use_avg --method $METHOD
 ```
 
 ## Reconstruct embeddings
 ### Train reconstruction model
 ```
-python scripts/reconstruct_embeddings.py --embed_model idefics2 --test_vector_folder /data/wenyan/output/VisU/idefics2_vector_blocks/test \
-    --out_dir /data/wenyan/output/VisU/embed_reconstruction_res/test \
-    --model_dir /data/wenyan/output/VisU/embed_reconstruction_res > /data/wenyan/output/VisU/logs/idefics2_emb_reconstruct_eval.log 2>&1
+export MODEL=idefics2
+export DATA=coco
+export BS=64
+export EPOCHS=30
+export LR=1e-4
+export TYPE=mlp
+export HID_DIM=3072
+export SEED=42
+export LAYERS=16
+export OUT_PATH=${MODEL}_${DATA}_bs${BS}_lr${LR}_epochs${EPOCHS}_hiddim${HID_DIM}_layers${LAYERS}_seed${SEED}_normalize
+
+OMP_NUM_THREADS=1 torchrun --standalone --nnodes=1 --nproc_per_node=2 \
+    scripts/reconstruct_embeddings_parallel.py --embed_model $MODEL \
+    --vector_folder embed/${MODEL}_vector_blocks_${DATA} \
+    --out_dir output/reconstruct_parallel/$OUT_PATH \
+    --batch_size $BS --lr $LR --epochs $EPOCHS --hidden_size $HID_DIM --num_layers $LAYERS --model_type $TYPE --seed $SEED \
+    --normalize 
 ```
 
 ### Eval reconstruction model
 ```
-python scripts/reconstruct_embeddings.py --embed_model idefics2  --eval \
-    --test_vector_folder /data/wenyan/output/VisU/idefics2_vector_blocks/test \
-    --out_dir /data/wenyan/output/VisU/embed_reconstruction_res/test \
-    --model_dir <path to model ckpt dir> > /data/wenyan/output/VisU/logs/idefics2_emb_reconstruct_eval.log 2>&1
+python scripts/reconstruct_embeddings.py --embed_model $MODEL \
+    --test_vector_folder embed/${MODEL}_vector_blocks_${DATA} \
+    --model_dir $MODEL_DIR \
+    --out_dir output/embed_reconstruction_res/pred/$OUT_PATH \
+    --hidden_size $HID_DIM --model_type $TYPE --num_layers $NUM_LAYERS --eval --normalize
+```
+
+## Eval Captioning
+```
+python scripts/eval_caption.py --data_config datasets.yaml \
+    --dataset $DATA \
+    --model $MODEL --out_dir /output/caption/${MODEL}_${DATA}_res
+```
+
+## Eval Multiple-choice question answering
+```
+python scripts/eval_multiple_choice.py --data_config datasets.yaml \
+    --model $MODEL --dataset $DATA \
+    --out_dir output/mcvqa/${MODEL}_${DATA}_res \
+    --get_option_probs --batch_size 2
 ```
