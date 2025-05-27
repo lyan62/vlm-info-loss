@@ -1,0 +1,23 @@
+datasets:
+  foodieqa:
+    ann_path: /ceph/hpc/data/d2024d05-018-users/wenyan/data/foodie/FoodieQA/sivqa_tidy.json
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/data/foodie/FoodieQA/
+  vqav2:
+    ann_path: /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/VQAv2/v2_OpenEnded_mscoco_val2014_questions.json
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/VQAv2/val2014
+  seedbench:
+    ann_path: /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/SEED-Bench/SEED-Bench.json
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/data/VisU/SEED-Bench/SEED-Bench-image
+  coco:
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/data/coco/train2017
+  vizwizgvqa:
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/data/viswiz_vqa_grounding/val
+    ann_path: /ceph/hpc/data/d2024d05-018-users/wenyan/data/viswiz_vqa_grounding/annotations/val_grounding.json
+  cub:
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/code/VisU/segmentations
+  flickr30k:
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/data/flickr30k/flickr30k_images
+    ann_path: /ceph/hpc/data/d2024d05-018-users/wenyan/data/flickr30k/dataset_flickr30k.json
+  coco_test:
+    image_dir: /ceph/hpc/data/d2024d05-018-users/wenyan/data/coco/val2014
+    ann_path: /ceph/hpc/data/d2024d05-018-users/wenyan/data/coco/dataset_coco.json
