@@ -64,3 +64,6 @@ python scripts/eval_multiple_choice.py --data_config datasets.yaml \
     --out_dir output/mcvqa/${MODEL}_${DATA}_res \
     --get_option_probs --batch_size 2
 ```
+
+## Visualization
+We provide the visualization of reconstructed embeddings in notebook `scripts/vis_vizwizgvqa.ipynb`
