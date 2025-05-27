@@ -1,0 +1,15 @@
+datasets==3.2.0
+huggingface_hub==0.27.1
+numpy==2.2.2
+pandas==2.2.3
+Pillow==11.1.0
+Requests==2.32.3
+safetensors==0.5.2
+torch==2.5.1
+tqdm==4.67.1
+transformers==4.48.1 # for molmo
+wandb==0.19.4
+torch==2.5.1
+torchvision==0.20.1
+einops==0.8.0
+accelerate==0.26.0
