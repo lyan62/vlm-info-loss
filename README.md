@@ -1,7 +1,11 @@
+# Information Loss for Vision-Language Models
+## Preparation
+Download the dataset such as Seedbench and COCO from their official website, and setup annotation and data path in `dataset.yaml` (example provided).
+Note that the extracted visual embeddings could be quite large, for example for LLAVA it could takes around 1T for COCO datset. Make sure you have enough storage before extracting the embeddings.
 ## Extract embeddings
 
 Extract embeddings for the entire image set for the dataset (SEEDBENCH, foodieQA, etc.)
-Note that the extracted visual embeddings could be quite large, for example for LLAVA it could takes around 1T for coco datset. 
+
 ```
 export MODEL=llava
 export DATA=seedbench
