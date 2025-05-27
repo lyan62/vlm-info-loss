@@ -1,7 +1,7 @@
 ## Extract embeddings
 
 Extract embeddings for the entire image set for the dataset (SEEDBENCH, foodieQA, etc.)
-
+Note that the extracted visual embeddings could be quite large, for example for LLAVA it could takes around 1T for coco datset. 
 ```
 export MODEL=llava
 export DATA=seedbench
