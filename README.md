@@ -1,4 +1,7 @@
 # Information Loss for Vision-Language Models
+
+Official repo of the paper [Lost in Embeddings: Information Loss for Vision-Language Models](https://arxiv.org/abs/2509.11986) (2025 EMNLP findings)
+
 ## Preparation
 Download the dataset such as Seedbench and COCO from their official website, and setup annotation and data path in `dataset.yaml` (example provided).
 Note that the extracted visual embeddings could be quite large, for example for LLaVA it could take around 1T for COCO image embeddings. Make sure you have enough storage before extracting the embeddings.
